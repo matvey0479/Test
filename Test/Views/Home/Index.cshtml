@@ -1,0 +1,31 @@
+﻿@using Test.Domain.Entites
+@model IQueryable<PriceList>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="priceLists">
+    <table class="lists">
+        <thread>
+            <tr>
+                <th>№</th>
+                <th>Название</th>
+            </tr>
+        </thread>
+        <tbody>
+            @if(Model != null)
+            {
+                foreach (var list in Model)
+                {
+                    <tr>
+                        <td>@list.id</td>
+                        <td>@list.Name</td>
+                    </tr>
+
+                }
+                
+            }
+        </tbody>
+    </table>
+    <button type="submit" asp-conroller="Home" asp-action="AddingPriceList">Добавить прайс-лист</button>
+</div>

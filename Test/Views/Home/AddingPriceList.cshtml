@@ -1,0 +1,28 @@
+﻿@using Test.Domain.Entites
+@model PriceList
+
+<div class="div-box">
+    <h1>Название прайс-листа</h1>
+    <input class="textbox" type="textbox" asp-for="Name"/>
+    @if (Model.Columns.Any())
+    {
+        foreach(var column in Model.Columns)
+        {
+            <table class="table">
+                <tr>
+                    <td>"Колонка @column.id"</td>
+                    <td><input class="textbox" type="textbox" value="@column.Name" asp-for="@column.Name"/></td>
+                    <td>
+                        <select class= "textbox"  asp-for="@column.DataType" value ="@column.DataType">
+                            <option>Число</option>
+                            <option>Текст</option>
+                        </select>
+                    </td>
+                    <td><button class="DeleteColumn" asp-controller="Home" asp-action="DeleteColumn">Удалить</button></td>
+                </tr>
+            </table>
+        }
+    }
+    <button class="SaveColumns" asp-controller="Home" asp-action="SaveColumns">Сохранить</button>
+    <button class="AddColumn" asp-controller="Home" asp-action="AddColumns">Добавить колонку</button>
+</div>
