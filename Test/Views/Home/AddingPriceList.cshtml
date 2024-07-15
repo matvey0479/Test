@@ -1,28 +1,79 @@
 ﻿@using Test.Domain.Entites
-@model PriceList
+@model Column
 
 <div class="div-box">
-    <h1>Название прайс-листа</h1>
-    <input class="textbox" type="textbox" asp-for="Name"/>
-    @if (Model.Columns.Any())
-    {
-        foreach(var column in Model.Columns)
-        {
-            <table class="table">
-                <tr>
-                    <td>"Колонка @column.id"</td>
-                    <td><input class="textbox" type="textbox" value="@column.Name" asp-for="@column.Name"/></td>
-                    <td>
-                        <select class= "textbox"  asp-for="@column.DataType" value ="@column.DataType">
-                            <option>Число</option>
-                            <option>Текст</option>
-                        </select>
-                    </td>
-                    <td><button class="DeleteColumn" asp-controller="Home" asp-action="DeleteColumn">Удалить</button></td>
-                </tr>
-            </table>
-        }
-    }
-    <button class="SaveColumns" asp-controller="Home" asp-action="SaveColumns">Сохранить</button>
-    <button class="AddColumn" asp-controller="Home" asp-action="AddColumns">Добавить колонку</button>
+    <button id="create" class="createPriceList" type="button" onclick="AddCollumn()">Сохранить</button>
+    <h5>Название прайс-листа*</h5>
+    <input class="textbox" type="text" @* asp-for="Name" *@/>
+    <table id="submissionTable" class="table">
+        <tr id="tablerow">        
+        </tr>
+    </table>
+    <button id="add" class="AddColumn" type="button">Добавить колонку</button>
 </div>
+
+@section Scripts{
+    <script>
+        var counter = 1;
+        $(function () {
+            $('#add').click(function () {
+                $('<tr id="tablerow' + counter + '"><td>' +
+                    '"Колонка' +counter +'"</td><td>'+
+                    '<input type="text" class="text-box single-line" id="Name[' + counter + ']" value="" required="required" />' +
+                    '</td>' +
+                    '<td>' +
+                    '<select id ="dataType" class= "textbox" id="DataType[' + counter + ']"  value ="">' +
+                            '<option>Число</option>'+
+                            '<option>Текст</option>'+
+                        '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<button type="button" class="DeleteColumn" onclick="removeTr(' + counter + ');">Удалить</button>' +
+                    '</td>' +
+                    '</tr>').appendTo('#submissionTable');
+                counter++;
+                return false;
+            });
+        });
+        function removeTr(index) {
+            if (counter > 1) {
+                $('#tablerow' + index).remove();
+                counter--;
+            }
+            return false;
+        };
+        function AddCollumn(){
+                var table = document.getElementById('submissionTable')   ;
+                var rows = table.getElementsByTagName("tr");
+                var names,dataTypes = [];
+                var data = [];
+
+                for (var i = 0; i < rows.length; i++) {
+                    names[i] = rows[i].cells[1].textContent;
+                    dataTypes[i] = rows[i].cells[2].textContent;             
+
+                }
+                for (var i = 0; i < rows.lenght;i++)
+                {
+                    data.push({
+                        Name: names[i].text,
+                        DataType: dataTypes[i].text
+                    });
+                }
+                console.log(formData)
+                $.ajax({
+                    type: "post",
+                    url: "/Home/AddPriceList",
+                    data: data,
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (req, status, error) {
+                        console.log(status)
+                    }
+                });
+
+        }
+
+    </script>
+}
