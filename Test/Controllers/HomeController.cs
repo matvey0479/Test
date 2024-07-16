@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Test.Domain;
@@ -14,34 +15,28 @@ namespace Test.Controllers
         {
             this.context = context;
         } 
-       
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var pricelists = await context.priceLists.ToListAsync();
+            return View(pricelists);
         }
         public IActionResult AddingPriceList() 
         {
-            return View(new Column());
+            return View(new PriceList());
         }
         [HttpPost]
-        public JsonResult AddPriceList(Column column/*,PriceList priceList*/)
+        public async Task<IActionResult> AddPriceList([FromBody] CreatePriceRequest data/*,PriceList priceList*/)
         {
-            //List<Column> columns= new List<Column>();
-            //for (int i=0;i<=Request.Form.Count;i++) 
-            //{
-            //    var Name = Request.Form["Name[" + i + "]"];
-            //    var DataType = Request.Form["DataType[" + i + "]"];
-            //    if (!String.IsNullOrEmpty(Name) && !String.IsNullOrEmpty(DataType))
-            //    {
-            //        Column column = new Column { Name = Name, DataType = DataType };
-            //        columns.Add(column);
-            //        await context.Columns.AddAsync(column);
-            //    }
-            //}
-            ////await context.priceLists.AddAsync(priceList = new PriceList( priceList.Name, columns ));
-            ////context.SaveChanges();
-            //return Ok();
-            return Json(column);
+            foreach (Column column in data.Columns)
+            {
+                await context.Columns.AddAsync(column);
+            }
+
+            await context.priceLists.AddAsync(new PriceList(data.Name, data.Columns));
+            await context.SaveChangesAsync();
+
+            return Ok();
 
 
         }

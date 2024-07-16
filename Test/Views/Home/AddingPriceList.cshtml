@@ -1,16 +1,16 @@
 ﻿@using Test.Domain.Entites
-@model Column
+@model PriceList
 
-<div class="div-box">
-    <button id="create" class="createPriceList" type="button" onclick="AddCollumn()">Сохранить</button>
-    <h5>Название прайс-листа*</h5>
-    <input class="textbox" type="text" @* asp-for="Name" *@/>
-    <table id="submissionTable" class="table">
-        <tr id="tablerow">        
-        </tr>
-    </table>
-    <button id="add" class="AddColumn" type="button">Добавить колонку</button>
-</div>
+    <div class="div-box">
+        <button id="create" class="createPriceList" type="button" onclick="AddCollumn()">Сохранить</button>
+        <h5>Название прайс-листа*</h5>
+        <input  "class="textbox" type="text" id="NamePriceList" />
+        <table id="submissionTable" class="table">
+            <tr id="tablerow">        
+            </tr>
+        </table>
+        <button id="add" class="AddColumn" type="button">Добавить колонку</button>
+    </div>
 
 @section Scripts{
     <script>
@@ -22,7 +22,7 @@
                     '<input type="text" class="text-box single-line" id="Name[' + counter + ']" value="" required="required" />' +
                     '</td>' +
                     '<td>' +
-                    '<select id ="dataType" class= "textbox" id="DataType[' + counter + ']"  value ="">' +
+                    '<select class= "textbox" id="DataType[' + counter + ']"  value ="">' +
                             '<option>Число</option>'+
                             '<option>Текст</option>'+
                         '</select>' +
@@ -43,28 +43,35 @@
             return false;
         };
         function AddCollumn(){
-                var table = document.getElementById('submissionTable')   ;
-                var rows = table.getElementsByTagName("tr");
-                var names,dataTypes = [];
-                var data = [];
+                var namePriceList = document.getElementById("NamePriceList").value;
+                var table = document.getElementById('submissionTable');
+                var names = [];
+                var dataTypes = [];
+                var columns = [];
 
-                for (var i = 0; i < rows.length; i++) {
-                    names[i] = rows[i].cells[1].textContent;
-                    dataTypes[i] = rows[i].cells[2].textContent;             
+                for (var i = 1; i < table.rows.length; i++) {
+
+                    names[i-1] = document.getElementById('Name[' + i + ']').value;
+                    var select = document.getElementById('DataType[' + i + ']');
+                    dataTypes[i - 1] = select.options[select.selectedIndex].text;
 
                 }
-                for (var i = 0; i < rows.lenght;i++)
+                for (var i = 0; i < table.rows.length-1;i++)
                 {
-                    data.push({
-                        Name: names[i].text,
-                        DataType: dataTypes[i].text
+                    columns.push({
+                        Name: names[i],
+                        DataType: dataTypes[i]
                     });
                 }
-                console.log(formData)
+                var data = ({
+                    Name: namePriceList,
+                    Columns: columns
+                });
                 $.ajax({
                     type: "post",
                     url: "/Home/AddPriceList",
-                    data: data,
+                    data: JSON.stringify(data),
+                    contentType: "application/json;charset=utf-8",
                     success: function (result) {
                         console.log(result);
                     },
@@ -72,6 +79,7 @@
                         console.log(status)
                     }
                 });
+                window.location.href = '/Home/Index/';
 
         }
 
