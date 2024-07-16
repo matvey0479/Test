@@ -2,15 +2,16 @@
 @model PriceList
 
     <div class="div-box">
-        <button id="create" class="createPriceList" type="button" onclick="AddCollumn()">Сохранить</button>
+        <button id="create" class="createPriceList" type="submit" onclick="AddCollumn()">Сохранить</button>
         <h5>Название прайс-листа*</h5>
-        <input  "class="textbox" type="text" id="NamePriceList" />
+        <input class="textbox" type="text" id="NamePriceList" />
         <table id="submissionTable" class="table">
             <tr id="tablerow">        
             </tr>
         </table>
         <button id="add" class="AddColumn" type="button">Добавить колонку</button>
     </div>
+
 
 @section Scripts{
     <script>
@@ -79,7 +80,8 @@
                         console.log(status)
                     }
                 });
-                window.location.href = '/Home/Index/';
+                window.location.href = '/Home/Index'
+                
 
         }
 

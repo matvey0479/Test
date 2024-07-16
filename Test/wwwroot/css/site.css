@@ -32,11 +32,11 @@ body {
     border: medium;
     border-color: aliceblue;
 }
-.table {
+table {
     margin-top:2vh;
     border-collapse:collapse;
     border: 1px solid;
 }
-.td {
+td,th {
     border: 1px solid;
 }

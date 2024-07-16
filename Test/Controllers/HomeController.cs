@@ -26,7 +26,7 @@ namespace Test.Controllers
             return View(new PriceList());
         }
         [HttpPost]
-        public async Task<IActionResult> AddPriceList([FromBody] CreatePriceRequest data/*,PriceList priceList*/)
+        public async Task<IActionResult> AddPriceList([FromBody]CreatePriceRequest data/*,PriceList priceList*/)
         {
             foreach (Column column in data.Columns)
             {
@@ -36,7 +36,7 @@ namespace Test.Controllers
             await context.priceLists.AddAsync(new PriceList(data.Name, data.Columns));
             await context.SaveChangesAsync();
 
-            return Ok();
+            return RedirectToAction("Index");
 
 
         }
