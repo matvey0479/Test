@@ -4,16 +4,15 @@ namespace Test.Domain.Entites
 {
     public class Product:Entity
     {
-        public Product (string name, PriceList priceList)
+        public Product (string name)
         {
             Name = name;
-            this.priceList = priceList;
         }
         public Product() { }
 
         public string Name { get; set; }
 
-        public PriceList priceList { get; set; }
+        public List<PriceList> priceLists { get; set; }
 
 
 

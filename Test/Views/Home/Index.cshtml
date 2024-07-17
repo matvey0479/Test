@@ -3,29 +3,58 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="priceLists">
-    <table class="lists">
-        <thread>
-            <tr>
-                <th>№</th>
-                <th>Название</th>
-            </tr>
-        </thread>
-        <tbody>
-            @if(Model != null)
-            {
-                foreach (var list in Model)
+<form asp-action="ShowPriceList">
+    <div class="priceLists">
+        <table class="lists">
+            <thread>
+                <tr>
+                    <th>№</th>
+                    <th>Название</th>
+                </tr>
+            </thread>
+            <tbody>
+                @if(Model != null)
                 {
-                    <tr>
-                        <td>@list.id</td>
-                        <td><a href="Home/ShowPriceList">@list.Name</a></td>
-                    </tr>
+                    foreach (var list in Model.Select((value,i)=>new {i,value}))
+                    {
+                        <tr>
+                            <td> <input value="@list.value.id" name ="idPriceList"></td>
+                            <td><a id="@list.value.id"  onclick="ShowPrice(this.id)" name="PriceList" value="@ViewBag.Name">@list.value.Name</a></td>
+                        </tr>
 
-                }
+                        
+                    }
                 
-            }
-        </tbody>
-    </table>
-    <a class="addingPrice" href="/Home/AddingPriceList">Добавить прайс-лист</a>
-</div>
+                }
+            </tbody>
+        </table>
+
+        
+        <a class="addingPrice" href="/Home/AddingPriceList">Добавить прайс-лист</a>
+    </div>
+</form>
+
+
+
+@section Scripts{
+    <script>
+        
+
+        function ShowPrice(id) {
+            // $("#"+id).on('click',function () {
+            //     $.ajax({
+            //         type: "Get",
+            //         url: "/Home/ShowPriceList?idPriceList=" + id,
+            //         success: function (data) {
+            //             console.log(data)
+            //         },
+            //         error: function (response) {
+            //             console.log(response.responseText);
+            //         }
+            //     });
+
+            // });
+            window.location.href = '/Home/ShowPriceList?idPriceList=' + id;
+        };
+    </script>
+}

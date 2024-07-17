@@ -2,16 +2,17 @@
 {
     public class PriceList:Entity
     {
-        public PriceList(string name, List<Column> columns)
+        public PriceList(string name)
         {
             date = DateTime.Now;
             Name = name;
-            Columns = columns;
+
         }
         public PriceList() { }
         public string Name { get; set; }
         public DateTime date { get; set; }
         public List<Column> Columns { get; set; }
+        public List<Product> Products { get; set; }
        
 
 

@@ -22,6 +22,36 @@ namespace Test.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ColumnPriceList", b =>
+                {
+                    b.Property<int>("Columnsid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("priceListsid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Columnsid", "priceListsid");
+
+                    b.HasIndex("priceListsid");
+
+                    b.ToTable("ColumnPriceList");
+                });
+
+            modelBuilder.Entity("PriceListProduct", b =>
+                {
+                    b.Property<int>("Productsid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("priceListsid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Productsid", "priceListsid");
+
+                    b.HasIndex("priceListsid");
+
+                    b.ToTable("PriceListProduct");
+                });
+
             modelBuilder.Entity("Test.Domain.Entites.Column", b =>
                 {
                     b.Property<int>("id")
@@ -38,14 +68,23 @@ namespace Test.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PriceListid")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
 
-                    b.HasIndex("PriceListid");
-
                     b.ToTable("Columns");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            DataType = "Текст",
+                            Name = "Название товара"
+                        },
+                        new
+                        {
+                            id = 2,
+                            DataType = "Число",
+                            Name = "Код товара"
+                        });
                 });
 
             modelBuilder.Entity("Test.Domain.Entites.PriceList", b =>
@@ -80,37 +119,39 @@ namespace Test.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("priceListid")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
-
-                    b.HasIndex("priceListid");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Test.Domain.Entites.Column", b =>
+            modelBuilder.Entity("ColumnPriceList", b =>
                 {
-                    b.HasOne("Test.Domain.Entites.PriceList", null)
-                        .WithMany("Columns")
-                        .HasForeignKey("PriceListid");
-                });
-
-            modelBuilder.Entity("Test.Domain.Entites.Product", b =>
-                {
-                    b.HasOne("Test.Domain.Entites.PriceList", "priceList")
+                    b.HasOne("Test.Domain.Entites.Column", null)
                         .WithMany()
-                        .HasForeignKey("priceListid")
+                        .HasForeignKey("Columnsid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("priceList");
+                    b.HasOne("Test.Domain.Entites.PriceList", null)
+                        .WithMany()
+                        .HasForeignKey("priceListsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Test.Domain.Entites.PriceList", b =>
+            modelBuilder.Entity("PriceListProduct", b =>
                 {
-                    b.Navigation("Columns");
+                    b.HasOne("Test.Domain.Entites.Product", null)
+                        .WithMany()
+                        .HasForeignKey("Productsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Test.Domain.Entites.PriceList", null)
+                        .WithMany()
+                        .HasForeignKey("priceListsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
