@@ -5,7 +5,7 @@ namespace Test.Models
     {
         public PriceList priceList { get; set; }
         public Product product { get; set; }
-        public Description description { get; set; }
+        public List<Description> descriptions { get; set; }
         public CreateProductRequest() { }
     }
 }

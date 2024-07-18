@@ -65,11 +65,11 @@
                                 <label>@Model.priceList.Columns[i].Name</label>
                                 @if (Model.priceList.Columns[i].DataType == "Текст")
                                {
-                                    <input type="text" asp-for="description.descriptionText"required class="form-control" />
+                                    <input type="text" asp-for="descriptions[i-2].descriptionText"required class="form-control" />
                                }
                                else
                                {
-                                   <input type="number"asp-for="description.descriptionText" required class="form-control"/>
+                                   <input type="number"asp-for="descriptions[i-2].descriptionNumber" required class="form-control"/>
                                }  
                             }
                             

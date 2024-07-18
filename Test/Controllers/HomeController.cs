@@ -58,18 +58,20 @@ namespace Test.Controllers
             return RedirectToAction("Index");
 
         }
-        public async Task<IActionResult> AddProduct(Product product,string priceListName,Description? description)
+        public async Task<IActionResult> AddProduct(Product product,string priceListName,List<Description>? descriptions)
         {
             var priceList = await context.priceLists.Include(list => list.Columns)
                                            .FirstOrDefaultAsync(list => list.Name == priceListName);
             await context.Products.AddAsync(product);
-            if (description != null)
+            if (descriptions != null)
             {
-
-                await context.descriptions.AddAsync(description);
-                product.descriptions.Add(description);
+                foreach(var description in descriptions)
+                {
+                    await context.descriptions.AddAsync(description);
+                    product.descriptions.Add(description);
+                }
                 
-
+                
             }
             priceList.Products.Add(product);
             await context.SaveChangesAsync();
