@@ -2,7 +2,7 @@
 
 namespace Test.Domain.Entites
 {
-    public class Column:Entity
+    public class Column
     {
         public Column(string name, string dataType)
         {
@@ -12,11 +12,11 @@ namespace Test.Domain.Entites
         public Column ()
         { 
         }
-        
+        public int Id { get; set; }
         public string Name { get; set; }
         public string DataType { get; set; }
 
-        public List<PriceList> priceLists { get; set; }
+        public List<PriceList> priceLists { get; set; } = new List<PriceList>();
 
     }
 }

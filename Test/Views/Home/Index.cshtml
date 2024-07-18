@@ -18,8 +18,8 @@
                     foreach (var list in Model.Select((value,i)=>new {i,value}))
                     {
                         <tr>
-                            <td> <input value="@list.value.id" name ="idPriceList"></td>
-                            <td><a id="@list.value.id"  onclick="ShowPrice(this.id)" name="PriceList" value="@ViewBag.Name">@list.value.Name</a></td>
+                            <td> <input value="@list.value.Id" name ="idPriceList" readonly/></td>
+                            <td><a id="@list.value.Id"  onclick="ShowPrice(this.id)" name="PriceList" value="@ViewBag.Name">@list.value.Name</a></td>
                         </tr>
 
                         
@@ -30,7 +30,7 @@
         </table>
 
         
-        <a class="addingPrice" href="/Home/AddingPriceList">Добавить прайс-лист</a>
+        <a class="addButton" href="/Home/AddingPriceList">Добавить прайс-лист</a>
     </div>
 </form>
 

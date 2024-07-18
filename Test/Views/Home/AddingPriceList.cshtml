@@ -1,20 +1,35 @@
 ﻿@using Test.Domain.Entites
 @model PriceList
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <div class="div-box">
         <button id="create" class="createPriceList" type="submit" onclick="AddCollumn()">Сохранить</button>
         <h5>Название прайс-листа*</h5>
-        <input class="textbox" type="text" id="NamePriceList" />
+        <input class="form-control" type="text" value="Прайс-лист от" id="NamePriceList" />
         <table id="submissionTable" class="table">
             <tr id="tablerow">        
             </tr>
         </table>
-        <button id="add" class="AddColumn" type="button">Добавить колонку</button>
+        <button id="add" class="addButton" type="button">Добавить колонку</button>
     </div>
 
 
 @section Scripts{
     <script>
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '.' + mm + '.' + yyyy;
+
+        document.getElementById("NamePriceList").value = "Прайс-лист от " + formattedToday;
         var counter = 1;
         $(function () {
             $('#add').click(function () {
@@ -81,7 +96,7 @@
                         console.log(status)
                     }
                 });
-                window.location.href = '/Home/Index'
+                // window.location.href = '/Home/Index'
                 
                 
 

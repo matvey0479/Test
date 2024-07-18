@@ -17,7 +17,7 @@ body {
   margin-bottom: 60px;
 }
 
-.addingPrice {
+.addButton {
     display: block;
     width:15vw;
     padding: 10px 10px;
@@ -40,3 +40,4 @@ table {
 td,th {
     border: 1px solid;
 }
+thr
