@@ -43,7 +43,7 @@ namespace Test.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -161,6 +161,18 @@ namespace Test.Migrations
                 name: "IX_PriceListProduct_priceListsId",
                 table: "PriceListProduct",
                 column: "priceListsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_priceLists_Name",
+                table: "priceLists",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_articleNumber",
+                table: "Products",
+                column: "articleNumber",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -5,83 +5,109 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <div>
-    <form method="post" asp-action="AddProduct" asp-controller="Home">
+    <form method="post" asp-controller="Home">
         <h1><input class="form-control" name="priceListName" value="@Model.priceList.Name" readonly /></h1>
         <button class="addButton" data-toggle="modal" data-target="#Modal">+Добавить позицию</button>
         <table class="table">
-       
+
             <thread>
-               <tr>
-                   @foreach(Column column in Model.priceList.Columns)
-                   {
+                <tr>
+                    @foreach (Column column in Model.priceList.Columns)
+                    {
                         <th>@column.Name</th>
-                   }
-                
-               </tr>
+                    }
+
+                </tr>
             </thread>
             <tbody>
-               <tr>
+                <tr>
                     @foreach (var product in Model.priceList.Products)
                     {
-                        <tr>
-                            <td>@product.Name</td>
-                            <td>@product.articleNumber</td>
-                            @foreach(var description in product.descriptions)
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.articleNumber</td>
+                            @foreach (var description in product.descriptions)
                             {
-                                if(description.descriptionNumber==null)
+                                if (description.descriptionNumber == null)
                                 {
-                                    <td>@description.descriptionText</td>
+                                <td>@description.descriptionText</td>
                                 }
                                 else
                                 {
-                                    <td>@description.descriptionNumber</td>
+                                <td>@description.descriptionNumber</td>
                                 }
 
                             }
-                        </tr>
+                        <td><button class="delete" 
+                            data-id="@product.Id"
+                            data-priceid="@Model.priceList.Id"
+                            data-controller="Home" 
+                            data-action="DeleteProduct"
+                            data-body-message = "Удалить товар?">
+                            Удалить</button>
+                        </td>
+                            
+                    </tr>
                     }
                 </tr>
             </tbody>
         </table>
-    
-            <div id="Modal" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Добавление товара</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
+
+        <div id="Modal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Добавление товара</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <label>Название:</label>
                             <input type="text" asp-for="product.Name" required class="form-control" />
                             <label>Артикул:</label>
                             <input type="number" asp-for="product.articleNumber" required class="form-control" />
-                            @for(int i=2;i<Model.priceList.Columns.Count;i++)
+                            @for (int i = 2; i < Model.priceList.Columns.Count; i++)
                             {
 
                                 <label>@Model.priceList.Columns[i].Name</label>
                                 @if (Model.priceList.Columns[i].DataType == "Текст")
-                               {
-                                    <input type="text" asp-for="descriptions[i-2].descriptionText"required class="form-control" />
-                               }
-                               else
-                               {
-                                   <input type="number"asp-for="descriptions[i-2].descriptionNumber" required class="form-control"/>
-                               }  
+                                {
+                                    <input type="text" asp-for="descriptions[i-2].descriptionText" required class="form-control" />
+                                }
+                                else
+                                {
+                                    <input type="number" asp-for="descriptions[i-2].descriptionNumber" required class="form-control" />
+                                }
+
                             }
-                            
-                            
-                       
+
+
+
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                <button asp-action="AddProduct" type="submit" class="btn btn-primary">Save changes</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
     </form>
 </div>
+
+@* @section Scripts{
+    <script>
+
+        function removeProduct(index) {
+
+            var data = @Html.Raw(Json.Serialize(@Model.priceList.Products));
+            var model = JSON.parse(data);
+            alert("Удалить товар " + model[index]);
+        
+            return false;
+        };
+
+    </script>
+} *@

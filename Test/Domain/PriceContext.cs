@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
+using System;
 using Test.Domain.Entites;
 namespace Test.Domain
 {
@@ -13,6 +15,15 @@ namespace Test.Domain
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             base.OnModelCreating(modelbuilder);
+
+            modelbuilder.Entity<PriceList>()
+                .HasIndex(p => new { p.Name })
+                .IsUnique();
+
+            modelbuilder.Entity<Product>()
+               .HasIndex(p => new { p.articleNumber })
+               .IsUnique();
+            
 
             modelbuilder.Entity<Column>().HasData(
                 new Column { Id=1,Name = "Название товара", DataType = "Текст" },

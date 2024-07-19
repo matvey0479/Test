@@ -12,7 +12,7 @@ using Test.Domain;
 namespace Test.Migrations
 {
     [DbContext(typeof(PriceContext))]
-    [Migration("20240718112010__initial")]
+    [Migration("20240719111203__initial")]
     partial class _initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,12 +133,15 @@ namespace Test.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("date")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("priceLists");
                 });
@@ -159,6 +162,9 @@ namespace Test.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("articleNumber")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });

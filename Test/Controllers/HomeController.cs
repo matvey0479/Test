@@ -11,76 +11,71 @@ namespace Test.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly PriceContext context;
-        public HomeController(PriceContext context) 
+        private readonly DataManager dataManager;
+        public HomeController(DataManager dataManager)
         {
-            this.context = context;
+            this.dataManager = dataManager;
         }
 
         CreateProductRequest productRequest = new CreateProductRequest();
+        PriceListColumns listColumns = new PriceListColumns();
         public async Task<IActionResult> Index()
         {
-            var pricelists = await context.priceLists.ToListAsync();
-            return View("Index",pricelists);
+            var pricelists = await dataManager.priceLists.GetPriceListsAsync();
+            return View("Index", pricelists);
         }
 
         public async Task<IActionResult> ShowPriceList(int idPriceList)
         {
-            productRequest.priceList = await context.priceLists.Include(list => list.Columns)
-                .Include(list=>list.Products)
-                .ThenInclude(prod=>prod.descriptions)
-                .FirstOrDefaultAsync(list => list.Id == idPriceList);
-            
+            productRequest.priceList = await dataManager.priceLists.GetPriceListByIdAsync(idPriceList);
             return View(productRequest);
         }
-        public IActionResult AddingPriceList() 
+        public async Task<IActionResult> AddingPriceList()
         {
-            return View(new PriceList());
+            listColumns.columns = await dataManager.columns.GetColumnsAsync();
+            return View(listColumns);
         }
         [HttpPost]
-        public async Task<IActionResult> AddPriceList([FromBody]CreatePriceRequest data/*,PriceList priceList*/)
+        public async Task<IActionResult> AddPriceList([FromBody] CreatePriceRequest data/*,PriceList priceList*/)
         {
 
-            
+
             foreach (Column column in data.Columns)
             {
-                await context.Columns.AddAsync(column);
+                await dataManager.columns.AddColumnAsync(column);
             }
             var priceList = new PriceList(data.Name);
-            await context.priceLists.AddAsync(priceList);
-            data.Columns.Add(context.Columns.FirstOrDefault(context=>context.Id == 1));
-            data.Columns.Add(context.Columns.FirstOrDefault(context => context.Id == 2));
-            priceList.Columns.AddRange(data.Columns);
-            
-
-            await context.SaveChangesAsync();
-
+            data.Columns.Add(await dataManager.columns.GetColumnsByIdAsync(1));
+            data.Columns.Add(await dataManager.columns.GetColumnsByIdAsync(2));
+            await dataManager.priceLists.AddPriceListAsync(priceList,data.Columns);
             return RedirectToAction("Index");
 
         }
-        public async Task<IActionResult> AddProduct(Product product,string priceListName,List<Description>? descriptions)
+        public async Task<IActionResult> AddProduct(Product product, string priceListName, List<Description>? descriptions)
         {
-            var priceList = await context.priceLists.Include(list => list.Columns)
-                                           .FirstOrDefaultAsync(list => list.Name == priceListName);
-            await context.Products.AddAsync(product);
-            if (descriptions != null)
+            try
             {
-                foreach(var description in descriptions)
-                {
-                    await context.descriptions.AddAsync(description);
-                    product.descriptions.Add(description);
-                }
-                
-                
+                var priceList = await dataManager.priceLists.GetPriceListColumnsByNameAsync(priceListName);
+                await dataManager.products.AddProductAsync(priceList, product, descriptions);
+                return RedirectToAction("ShowPriceList", new { idPriceList = priceList.Id });
             }
-            priceList.Products.Add(product);
-            await context.SaveChangesAsync();
-            return RedirectToAction("ShowPriceList", new { idPriceList = priceList.Id });
+            catch
+            {
+                return RedirectToAction("Error");
+            }
+           
 
 
         }
 
-   
+        public async Task<IActionResult> DeleteProduct (int id,int priceid)
+        {
+            var list = await dataManager.priceLists.GetPriceListByIdAsync(priceid);
+            await dataManager.products.DeleteProductAsync(list, id);
+            return Ok();
+        }
+
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

@@ -1,11 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Test.Domain;
 using Test.Domain.Entites;
+using Test.Domain.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddTransient<PriceListsRepository>();
+builder.Services.AddTransient<ColumnsRepository>();
+builder.Services.AddTransient<ProductsRepository>();
+builder.Services.AddTransient<DataManager>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<PriceContext>(x => x.UseSqlServer(connectionString));

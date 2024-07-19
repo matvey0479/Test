@@ -131,12 +131,15 @@ namespace Test.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("date")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("priceLists");
                 });
@@ -157,6 +160,9 @@ namespace Test.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("articleNumber")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
