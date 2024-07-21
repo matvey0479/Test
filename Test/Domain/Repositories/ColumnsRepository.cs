@@ -9,7 +9,7 @@ namespace Test.Domain.Repositories
     {
         private readonly PriceContext context;
 
-        public ColumnsRepository(PriceContext context) 
+        public ColumnsRepository(PriceContext context)
         {
             this.context = context;
         }
@@ -20,11 +20,11 @@ namespace Test.Domain.Repositories
         }
         public async Task<Column> GetColumnsByIdAsync(int id)
         {
-            return await context.Columns.FirstOrDefaultAsync(x=>x.Id == id);
+            return await context.Columns.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<Column> GetColumnsByNameAndDataTypeAsync(string name,string dataType)
+        public async Task<Column> GetColumnsByNameAndDataTypeAsync(string name, string dataType)
         {
-            return await context.Columns.FirstOrDefaultAsync(x => x.Name == name && x.DataType==dataType);
+            return await context.Columns.FirstOrDefaultAsync(x => x.Name == name && x.DataType == dataType);
         }
         public async Task AddColumnAsync(Column column)
         {

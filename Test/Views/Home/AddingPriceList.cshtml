@@ -4,42 +4,41 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<div class="div-box">
+    <button id="create" class="createPriceList" type="button" onclick="AddCollumn()">Сохранить</button>
+    <h5>Название прайс-листа*</h5>
+    <input class="form-control" type="text" value="Прайс-лист от" id="NamePriceList" />
+    <table id="submissionTable" class="table">
+        @for (int i = 2; i < Model.columns.Count; i++)
+        {
+            string id = "tablerow" + Model.columns[i - 2].Id;
+            <tr id="@id">
+                <td>Колонка @Model.columns[i-2].Id</td>
+                <td><input type="text" class="text-box single-line" id="Name[@Model.columns[i-2].Id]" value="@Model.columns[i].Name" /></td>
+                <td>
+                    <select class="textbox" id="DataType[@Model.columns[i-2].Id]">
+                        @if (@Model.columns[i].DataType == "Текст")
+                        {
+                            <option>Число</option>
+                            <option selected>Текст</option>
+                        }
+                        else
+                        {
+                            <option selected>Число</option>
+                            <option>Текст</option>
+                        }
 
-    <div class="div-box">
-        <button id="create" class="createPriceList" type="button" onclick="AddCollumn()">Сохранить</button>
-        <h5>Название прайс-листа*</h5>
-        <input class="form-control" type="text" value="Прайс-лист от" id="NamePriceList" />
-        <table id="submissionTable" class="table">
-            @for (int i =2;i<Model.columns.Count; i++)
-            {
-            string id = "tablerow" + Model.columns[i-2].Id;
-            <tr id= "@id">
-                    <td>Колонка @Model.columns[i-2].Id</td>
-                    <td><input type="text" class="text-box single-line" id="Name[@Model.columns[i-2].Id]" value="@Model.columns[i].Name" /></td>
-                    <td>
-                        <select class="textbox" id="DataType[@Model.columns[i-2].Id]">
-                            @if (@Model.columns[i].DataType=="Текст")
-                            {
-                                <option>Число</option>
-                                <option selected>Текст</option>
-                            }
-                            else
-                            {
-                                <option selected>Число</option>
-                                <option>Текст</option>
-                            }
-                            
-                        </select>
-                    </td>
-                    <td>
-                        <button type="button" class="DeleteColumn" onclick="removeTr(@Model.columns[i-2].Id);">Удалить</button>
-                    </td>
-                </tr>
-            }
-          
-        </table>
-        <button id="add" class="addButton" type="button">Добавить колонку</button>
-    </div>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="removeTr(@Model.columns[i-2].Id);">Удалить</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <button id="add" class="addButton" type="button">Добавить колонку</button>
+</div>
 
 
 @section Scripts{
@@ -55,23 +54,23 @@
         const formattedToday = dd + '.' + mm + '.' + yyyy;
 
         document.getElementById("NamePriceList").value = "Прайс-лист от " + formattedToday;
-        var counter = document.getElementById("submissionTable").rows.length+1;
+        var counter = document.getElementById("submissionTable").rows.length + 1;
         $(function () {
             $('#add').click(function () {
                 $('<tr id="tablerow' + counter + '"><td>' +
-                    'Колонка ' +counter +'</td><td>'+
+                    'Колонка ' + counter + '</td><td>' +
                     '<input type="text" class="text-box single-line" id="Name[' + counter + ']" value="" required="required" />' +
                     '</td>' +
                     '<td>' +
                     '<select class= "textbox" id="DataType[' + counter + ']"  value ="">' +
-                            '<option>Число</option>'+
-                            '<option>Текст</option>'+
-                        '</select>' +
+                    '<option>Число</option>' +
+                    '<option>Текст</option>' +
+                    '</select>' +
                     '</td>' +
                     '<td>' +
-                    '<button type="button" class="DeleteColumn" onclick="removeTr(' + counter + ');">Удалить</button>' +
+                    '<div><button type="button" class="btn btn-danger" onclick="removeTr(' + counter + ');">Удалить</button></div>' +
                     '</td>' +
-                    '</tr>').appendTo('#submissionTable');
+                  '</tr>').appendTo('#submissionTable')+
                 counter++;
                 return false;
             });
@@ -83,50 +82,49 @@
             }
             return false;
         };
-        function AddCollumn(){
-                var namePriceList = document.getElementById("NamePriceList").value;
-                var table = document.getElementById('submissionTable');
-                var names = [];
-                var dataTypes = [];
-                var columns = [];
+        function AddCollumn() {
+            var namePriceList = document.getElementById("NamePriceList").value;
+            var table = document.getElementById('submissionTable');
+            var names = [];
+            var dataTypes = [];
+            var columns = [];
 
-                for (var i = 1; i < table.rows.length+1; i++) {
+            for (var i = 1; i < table.rows.length + 1; i++) {
 
-                    names[i-1] = document.getElementById('Name[' + i + ']').value;
-                    var select = document.getElementById('DataType[' + i + ']');
-                    dataTypes[i - 1] = select.options[select.selectedIndex].text;
+                names[i - 1] = document.getElementById('Name[' + i + ']').value;
+                var select = document.getElementById('DataType[' + i + ']');
+                dataTypes[i - 1] = select.options[select.selectedIndex].text;
 
 
-                }
-                for (var i = 0; i < table.rows.length;i++)
-                {
-                    columns.push({
-                        Name: names[i],
-                        DataType: dataTypes[i]
-                    });
-                }
-                var data = ({
-                    Name: namePriceList,
-                    Columns: columns
+            }
+            for (var i = 0; i < table.rows.length; i++) {
+                columns.push({
+                    Name: names[i],
+                    DataType: dataTypes[i]
                 });
-                $.ajax({
-                    type: "post",
-                    url: "/Home/AddPriceList",
-                    data: JSON.stringify(data),
-                    contentType: "application/json;charset=utf-8",
-                    success: function (result) {
-                        console.log(result);
-                    },
-                    error: function (req, status, error) {
-                        console.log(status)
-                    }
-                });
-                setTimeout(function () {
-                    window.location.href = '/Home/Index'
-                },1000);
-                
-                
-                
+            }
+            var data = ({
+                Name: namePriceList,
+                Columns: columns
+            });
+            $.ajax({
+                type: "post",
+                url: "/Home/AddPriceList",
+                data: JSON.stringify(data),
+                contentType: "application/json;charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                },
+                error: function (req, status, error) {
+                    console.log(status)
+                }
+            });
+            setTimeout(function () {
+                window.location.href = '/Home/Index'
+            }, 1000);
+
+
+
 
         }
 

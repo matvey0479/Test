@@ -11,8 +11,8 @@ namespace Test.Domain.Repositories
     {
         private readonly PriceContext context;
 
-        public PriceListsRepository(PriceContext context) 
-        { 
+        public PriceListsRepository(PriceContext context)
+        {
             this.context = context;
         }
 
@@ -43,11 +43,11 @@ namespace Test.Domain.Repositories
             return priceList;
         }
 
-        public async Task AddPriceListAsync(PriceList priceList,List<Column> columns)
-        {           
+        public async Task AddPriceListAsync(PriceList priceList, List<Column> columns)
+        {
             await context.priceLists.AddAsync(priceList);
             priceList.Columns.AddRange(columns);
-            await context.SaveChangesAsync();         
+            await context.SaveChangesAsync();
         }
     }
 }

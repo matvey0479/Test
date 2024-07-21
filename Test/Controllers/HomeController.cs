@@ -38,8 +38,6 @@ namespace Test.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPriceList([FromBody] CreatePriceRequest data/*,PriceList priceList*/)
         {
-
-
             foreach (Column column in data.Columns)
             {
                 await dataManager.columns.AddColumnAsync(column);
@@ -50,10 +48,10 @@ namespace Test.Controllers
             {
                 columns.Add(await dataManager.columns.GetColumnsByNameAndDataTypeAsync(col.Name, col.DataType));
             }
-            
+
             columns.Add(await dataManager.columns.GetColumnsByIdAsync(1));
             columns.Add(await dataManager.columns.GetColumnsByIdAsync(2));
-            await dataManager.priceLists.AddPriceListAsync(priceList,columns);
+            await dataManager.priceLists.AddPriceListAsync(priceList, columns);
             return RedirectToAction("Index");
 
         }
@@ -65,7 +63,7 @@ namespace Test.Controllers
             return RedirectToAction("ShowPriceList", new { idPriceList = priceList.Id });
         }
 
-        public async Task<IActionResult> DeleteProduct (int id,int priceid)
+        public async Task<IActionResult> DeleteProduct(int id, int priceid)
         {
             var list = await dataManager.priceLists.GetPriceListByIdAsync(priceid);
             await dataManager.products.DeleteProductAsync(list, id);
