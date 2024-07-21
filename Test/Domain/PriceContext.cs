@@ -14,16 +14,7 @@ namespace Test.Domain
         public PriceContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
-            base.OnModelCreating(modelbuilder);
-
-            modelbuilder.Entity<PriceList>()
-                .HasIndex(p => new { p.Name })
-                .IsUnique();
-
-            modelbuilder.Entity<Product>()
-               .HasIndex(p => new { p.articleNumber })
-               .IsUnique();
-            
+            base.OnModelCreating(modelbuilder);          
 
             modelbuilder.Entity<Column>().HasData(
                 new Column { Id=1,Name = "Название товара", DataType = "Текст" },

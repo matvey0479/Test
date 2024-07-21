@@ -15,22 +15,53 @@ namespace Test.Domain.Repositories
         {
             this.context = context;
         }
+        public async Task<Product> GetProductByArticle(int article)
+        {
+            return await context.Products.FirstOrDefaultAsync(x => x.articleNumber == article);
+        }
 
         public async Task AddProductAsync(PriceList priceList, Product product, List<Description>? descriptions)
         {
-
-            await context.Products.AddAsync(product);
-            if (descriptions != null)
+            priceList = await context.priceLists.Include(x=>x.Products)
+                            .FirstOrDefaultAsync(x=>x.Id==priceList.Id);
+            if(context.Products.FirstOrDefault(x => x.articleNumber == product.articleNumber)==null)
             {
-                foreach (var description in descriptions)
+                await context.Products.AddAsync(product);
+                if (descriptions != null)
                 {
-                    await context.descriptions.AddAsync(description);
-                    product.descriptions.Add(description);
+                    foreach (var description in descriptions)
+                    {
+                        await context.descriptions.AddAsync(description);
+                        product.descriptions.Add(description);
+                    }
                 }
+                priceList.Products.Add(product);
             }
-            priceList.Products.Add(product);
+            else
+            {
+                //priceList.Products.Remove(await context.Products.FirstOrDefaultAsync(x => x.articleNumber == product.articleNumber));
+                product = await context.Products.Include(x=>x.descriptions)
+                    .FirstOrDefaultAsync(x => x.articleNumber == product.articleNumber);
+                foreach(var description in product.descriptions)
+                {
+                    context.descriptions.Remove(description);
+                }
+                priceList.Products.Remove(product);
+                if (descriptions != null)
+                {
+                    foreach (var description in descriptions)
+                    {
+                        await context.descriptions.AddAsync(description);
+                        product.descriptions.Add(description);
+                    }
+                }
+                product.Name = product.Name;
+                product.descriptions = product.descriptions;
+                context.Products.Update(product);
+                priceList.Products.Add(product);
+            }
+            
             await context.SaveChangesAsync();
-
 
 
         }

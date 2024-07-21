@@ -45,27 +45,24 @@ namespace Test.Controllers
                 await dataManager.columns.AddColumnAsync(column);
             }
             var priceList = new PriceList(data.Name);
-            data.Columns.Add(await dataManager.columns.GetColumnsByIdAsync(1));
-            data.Columns.Add(await dataManager.columns.GetColumnsByIdAsync(2));
-            await dataManager.priceLists.AddPriceListAsync(priceList,data.Columns);
+            var columns = new List<Column>();
+            foreach (var col in data.Columns)
+            {
+                columns.Add(await dataManager.columns.GetColumnsByNameAndDataTypeAsync(col.Name, col.DataType));
+            }
+            
+            columns.Add(await dataManager.columns.GetColumnsByIdAsync(1));
+            columns.Add(await dataManager.columns.GetColumnsByIdAsync(2));
+            await dataManager.priceLists.AddPriceListAsync(priceList,columns);
             return RedirectToAction("Index");
 
         }
-        public async Task<IActionResult> AddProduct(Product product, string priceListName, List<Description>? descriptions)
+        public async Task<IActionResult> AddProduct(Product product, int idPriceList, List<Description>? descriptions)
         {
-            try
-            {
-                var priceList = await dataManager.priceLists.GetPriceListColumnsByNameAsync(priceListName);
-                await dataManager.products.AddProductAsync(priceList, product, descriptions);
-                return RedirectToAction("ShowPriceList", new { idPriceList = priceList.Id });
-            }
-            catch
-            {
-                return RedirectToAction("Error");
-            }
-           
 
-
+            var priceList = await dataManager.priceLists.GetPriceListColumnsByIdAsync(idPriceList);
+            await dataManager.products.AddProductAsync(priceList, product, descriptions);
+            return RedirectToAction("ShowPriceList", new { idPriceList = priceList.Id });
         }
 
         public async Task<IActionResult> DeleteProduct (int id,int priceid)

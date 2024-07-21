@@ -30,10 +30,10 @@ namespace Test.Domain.Repositories
                 .FirstOrDefaultAsync(list => list.Id == id);
             return priceList;
         }
-        public async Task<PriceList> GetPriceListColumnsByNameAsync(string namePriceList)
+        public async Task<PriceList> GetPriceListColumnsByIdAsync(int id)
         {
             var priceList = await context.priceLists.Include(list => list.Columns)
-                                           .FirstOrDefaultAsync(list => list.Name == namePriceList);
+                                           .FirstOrDefaultAsync(list => list.Id == id);
             return priceList;
         }
         public async Task<PriceList> GetPriceListProductsByIdAsync(int id)

@@ -22,11 +22,17 @@ namespace Test.Domain.Repositories
         {
             return await context.Columns.FirstOrDefaultAsync(x=>x.Id == id);
         }
+        public async Task<Column> GetColumnsByNameAndDataTypeAsync(string name,string dataType)
+        {
+            return await context.Columns.FirstOrDefaultAsync(x => x.Name == name && x.DataType==dataType);
+        }
         public async Task AddColumnAsync(Column column)
         {
-            if(!context.Columns.Where(x=>x.DataType==column.DataType && x.Name == column.Name).Any())
+            bool col = context.Columns.Any(x => x.Name == column.Name && x.DataType == column.DataType);
+            if (!col)
             {
                 await context.Columns.AddAsync(column);
+                await context.SaveChangesAsync();
             }
         }
 

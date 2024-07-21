@@ -22,7 +22,7 @@
                     {
                         <tr>
                             <td> <input value="@list.value.Id" name ="idPriceList" readonly class="border-0"/></td>
-                            <td><a id="@list.value.Id"  onclick="ShowPrice(this.id)" name="PriceList" value="@ViewBag.Name">@list.value.Name</a></td>
+                            <td><a href="" id="@list.value.Id" onclick="ShowPrice(this.id); return false;" name="PriceList" >@list.value.Name</a></td>
                         </tr>
 
                         
