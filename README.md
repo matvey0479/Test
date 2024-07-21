@@ -2,4 +2,4 @@
 
 create DataBase : dotnet ef database update
 
-https://github.com/user-attachments/assets/f15dd71f-fa47-47ac-89d4-513cc43ab476
+https://github.com/user-attachments/assets/531dfdda-323c-4c0f-a70a-0983d7e5983e
